@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-public class PotionCreation : BaseItemCreation
+public class PotionCreation : BaseItemCreation<Potion>
 {
     // Potion specific properties
     private PotionEffect potionEffect;

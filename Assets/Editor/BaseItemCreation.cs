@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class BaseItemCreation : EditorWindow
+public abstract class BaseItemCreation<T> : EditorWindow where T : BaseItem
 {
     protected string itemName;
     protected Sprite icon;
@@ -22,7 +22,7 @@ public abstract class BaseItemCreation : EditorWindow
         rarity = (Rarity)EditorGUILayout.EnumPopup("Rarity:", rarity);
     }
 
-    protected void CreateItem<T>() where T : BaseItem
+    protected void CreateItem()
     {
         T newItem = CreateInstance<T>();
 
@@ -32,7 +32,6 @@ public abstract class BaseItemCreation : EditorWindow
         {
             folderPath += "Weapons/";
         }
-        //---! vvv
         // Add more conditions for other types
 
         // Create the directory if it doesn't exist
@@ -46,9 +45,11 @@ public abstract class BaseItemCreation : EditorWindow
         string fullPath = folderPath + itemName + ".asset";
 
         AssetDatabase.CreateAsset(newItem, fullPath);
+        
         newItem.itemName = itemName;
         newItem.baseValue = baseValue;
         newItem.rarity = rarity;
+        
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }

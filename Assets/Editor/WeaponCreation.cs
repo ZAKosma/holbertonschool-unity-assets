@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class WeaponCreation : BaseItemCreation
+public class WeaponCreation : BaseItemCreation<Weapon>
 {
     // Weapon specific properties
     private WeaponType weaponType;

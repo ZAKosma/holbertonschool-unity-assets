@@ -53,6 +53,23 @@ public class DatabasesManager : EditorWindow
                 ImportArmorFromCSV(path);
             }
         }
+        
+        // Separator
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorGUILayout.Space();
+
+        // Buttons to access other windows
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+        if (GUILayout.Button("Weapon Database")) WeaponDatabase.ShowWindow();
+        if (GUILayout.Button("Potion Database")) PotionDatabase.ShowWindow();
+        if (GUILayout.Button("Armor Database")) ArmorDatabase.ShowWindow();
+        // if (GUILayout.Button("Other Items")) OtherItemsDatabase.ShowWindow();
+        // if (GUILayout.Button("Item Creation")) ItemCreation.ShowWindow();
+        if (GUILayout.Button("Statistics Page")) StatisticsPage.ShowWindow();
+
+        EditorGUILayout.EndScrollView();
     }
     
     private void ImportWeaponsFromCSV(string path)

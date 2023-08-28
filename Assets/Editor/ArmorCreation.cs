@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-public class ArmorCreation : BaseItemCreation
+public class ArmorCreation : BaseItemCreation<Armor>
 {
     // Armor specific properties
     private ArmorType armorType;

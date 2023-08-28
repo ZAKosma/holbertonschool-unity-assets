@@ -4,16 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
-public class WeaponDatabase : EditorWindow
+public class WeaponDatabase : ItemDatabase<Weapon>
 {
-    private Vector2 scrollPosition;
-    private Weapon selectedItem;
-    private string searchString = "";
-    private float propertiesSectionWidth = 400f; // Default width for properties section
-
-    private bool isResizingPropertiesSection; // New flag for resizing
-
-    private Texture2D defaultIcon; // Declare a variable for the default icon
 
     public WeaponDatabase()
     {
@@ -27,84 +19,8 @@ public class WeaponDatabase : EditorWindow
         GetWindow<WeaponDatabase>("Weapon Database");
     }
 
-    private void OnEnable()
-    {
-        // Load the default icon from your Resources folder (or any other path)
-        defaultIcon = Resources.Load<Texture2D>("DefaultIcon");
-        InitializeDefaultFilterOptions();
-    }
 
-    private void OnGUI()
-    {
-        // Start Horizontal layout
-        GUILayout.BeginHorizontal();
-
-        // Weapons List Section
-        DrawWeaponsList();
-
-        // Draw divider
-        DrawDividerAndHandle();
-
-        // Properties Section
-        GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(propertiesSectionWidth));
-        DrawPropertiesSection();
-        GUILayout.EndVertical();
-
-        GUILayout.EndHorizontal(); // End Horizontal layout
-
-        // Resize handle logic
-        HandleDividerDrag();
-    }
-
-    private void DrawWeaponsList()
-    {
-        float weaponsListWidth = position.width - propertiesSectionWidth - 5;
-        GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(weaponsListWidth));
-
-        // Top Left Options
-        DrawTopLeftOptions();
-
-        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
-        string[] guids = AssetDatabase.FindAssets("t:Weapon");
-        IEnumerable<Weapon> weapons = guids.Select(guid =>
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            return AssetDatabase.LoadAssetAtPath<Weapon>(path);
-        });
-        int totalItems = weapons.Count();
-        weapons = ApplyFilter(weapons); // Apply the filter
-        int showingItems = weapons.Count();
-
-        GUILayout.Label($"Showing {showingItems} out of {totalItems} items.");
-
-        weapons = ApplyFilter(weapons); // Apply the filter
-        foreach (Weapon weapon in weapons)
-        {
-
-            Texture2D iconTexture =
-                weapon.icon != null ? weapon.icon.texture : defaultIcon; // Use default icon if weapon's icon is null
-
-            // Draw the elements
-            Rect rect = EditorGUILayout.BeginHorizontal(GUI.skin.box);
-            if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-            {
-                selectedItem = weapon;
-                Selection.activeObject = weapon;
-                Event.current.Use();
-            }
-
-            GUILayout.Box(iconTexture, GUILayout.Width(30), GUILayout.Height(30));
-            GUILayout.Label(weapon.itemName);
-            EditorGUILayout.EndHorizontal();
-        }
-
-        EditorGUILayout.EndScrollView();
-
-        GUILayout.EndVertical();
-    }
-
-
-    private IEnumerable<Weapon> ApplyFilter(IEnumerable<Weapon> weapons)
+    protected override IEnumerable<Weapon> ApplyFilter(IEnumerable<Weapon> weapons)
     {
         // Filtering based on the search string
         if (!string.IsNullOrEmpty(searchString))
@@ -207,6 +123,16 @@ public class WeaponDatabase : EditorWindow
     }
 
 
+    protected override void ExportItemsToCSV()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void ImportItemsFromCSV()
+    {
+        throw new NotImplementedException();
+    }
+
     private void DrawTopLeftOptions()
     {
         // Database Admin Functions
@@ -242,8 +168,8 @@ public class WeaponDatabase : EditorWindow
         InitializeDefaultFilterOptions(); // Resets the filters to default values
     }
 
-    
-    private void DrawPropertiesSection()
+
+    protected override void DrawPropertiesSection()
     {
         // Make the "Properties Section:" label bold
         GUILayout.Label("Properties Section:", EditorStyles.boldLabel);
@@ -253,43 +179,6 @@ public class WeaponDatabase : EditorWindow
             EditorGUIUtility.labelWidth = 140;
             EditorGUILayout.Space();
             DrawSelectedWeaponProperties(selectedItem);
-        }
-    }
-
-    private void DrawDividerAndHandle()
-    {
-        // Draw background color
-        Rect rect = GUILayoutUtility.GetRect(5, 5, position.height, 5);
-        EditorGUI.DrawRect(rect, new Color(0.6f, 0.6f, 0.6f));
-
-        // Draw handle texture (using Unity's built-in texture)
-        GUIStyle resizeHandleStyle = new GUIStyle();
-        resizeHandleStyle.normal.background = EditorGUIUtility.Load("icons/d_AvatarBlendBackground.png") as Texture2D;
-        GUI.Box(new Rect(rect.x, rect.y, rect.width, rect.height), "", resizeHandleStyle);
-
-        EditorGUIUtility.AddCursorRect(rect, MouseCursor.ResizeHorizontal);
-
-        if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-        {
-            isResizingPropertiesSection = true;
-        }
-    }
-
-
-    private void HandleDividerDrag()
-    {
-        if (isResizingPropertiesSection)
-        {
-            propertiesSectionWidth -= Event.current.delta.x;
-            // Ensure the properties section width is within bounds
-            float maxPropertiesSectionWidth = position.width * 0.8f; // 80% of the window's width
-            propertiesSectionWidth = Mathf.Clamp(propertiesSectionWidth, 200, maxPropertiesSectionWidth);
-            Repaint();
-        }
-
-        if (Event.current.type == EventType.MouseUp)
-        {
-            isResizingPropertiesSection = false;
         }
     }
 
@@ -469,7 +358,7 @@ public class WeaponDatabase : EditorWindow
         // Your CSV exporting logic here
     }
     
-    private void InitializeDefaultFilterOptions()
+    protected override void InitializeDefaultFilterOptions()
     {
         filterOptions.weaponTypeMask = (WeaponType)Enum.GetValues(typeof(WeaponType)).Cast<int>().Sum();
         filterOptions.rarityMask = (Rarity)Enum.GetValues(typeof(Rarity)).Cast<int>().Sum();
