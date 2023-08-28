@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Sword of Holding
+  m_EditorClassIdentifier: 
+  itemName: Sword of Holding
+  icon: {fileID: 21300000, guid: 80bb59dd746001942bc52f01bdc2f3e5, type: 3}
+  description: Holds Things
+  baseValue: 120
+  rarity: 3
+  requiredLevel: 5
+  equipSlot: 5
+  weaponType: 0
+  attackPower: 4
+  attackSpeed: 1
+  durability: 200
+  range: 2
+  criticalHitChance: 0.5

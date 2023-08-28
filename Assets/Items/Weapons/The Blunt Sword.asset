@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: The Blunt Sword
+  m_EditorClassIdentifier: 
+  itemName: The Blunt Sword
+  icon: {fileID: 21300000, guid: 6e6c41d8c1da8ef4085f28360042c21d, type: 3}
+  description: Not sure why it's called a sword...
+  baseValue: 25
+  rarity: 1
+  requiredLevel: 1
+  equipSlot: 4
+  weaponType: 6
+  attackPower: 5
+  attackSpeed: 1
+  durability: 120
+  range: 1.2
+  criticalHitChance: 0.01

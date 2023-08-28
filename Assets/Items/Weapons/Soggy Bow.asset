@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Soggy Bow
+  m_EditorClassIdentifier: 
+  itemName: Soggy Bow
+  icon: {fileID: 21300000, guid: 8bbe58e4aa0671146b95bf9318ad3a17, type: 3}
+  description: Made of wet twigs. Not very effective.
+  baseValue: 33.03
+  rarity: 1
+  requiredLevel: 2
+  equipSlot: 4
+  weaponType: 1
+  attackPower: 8
+  attackSpeed: 1.2
+  durability: 60
+  range: 10
+  criticalHitChance: 0.02
