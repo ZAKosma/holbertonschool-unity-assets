@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Muffler of Mumbling
   m_EditorClassIdentifier: 
   itemName: Muffler of Mumbling
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b3771b33bfeb1b64692dc6bc63fdb474, type: 3}
   description: Makes everything sound profound yet unintelligible.
   baseValue: 5
-  rarity: 3
+  rarity: 4
   requiredLevel: 4
-  equipSlot: 3
-  armorType: 9
+  equipSlot: 1
+  armorType: 2
   defensePower: 0
   resistance: 5
   weight: 1

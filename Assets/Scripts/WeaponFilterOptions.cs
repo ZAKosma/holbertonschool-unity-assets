@@ -3,9 +3,10 @@ using System.Linq;
 
 public class WeaponFilterOptions
 {
-    public WeaponType weaponTypeMask = (WeaponType)Enum.GetValues(typeof(WeaponType)).Cast<int>().Sum();
-    public Rarity rarityMask = (Rarity)Enum.GetValues(typeof(Rarity)).Cast<int>().Sum();
-    public EquipSlot equipSlotMask = (EquipSlot)Enum.GetValues(typeof(EquipSlot)).Cast<int>().Sum();
+    
+    public WeaponType weaponTypeMask = (WeaponType)Enum.GetValues(typeof(WeaponType)).Cast<WeaponType>().Aggregate((a, b) => a | b);
+    public Rarity rarityMask = (Rarity)Enum.GetValues(typeof(Rarity)).Cast<Rarity>().Aggregate((a, b) => a | b);
+    public EquipSlot equipSlotMask = (EquipSlot)Enum.GetValues(typeof(EquipSlot)).Cast<EquipSlot>().Aggregate((a, b) => a | b);
     public float? minAttackPower = null;
     public float? maxAttackPower = null;
     public float? minAttackSpeed = null;

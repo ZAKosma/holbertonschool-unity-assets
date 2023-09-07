@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Mystical Staff
   m_EditorClassIdentifier: 
   itemName: Mystical Staff
-  icon: {fileID: 21300000, guid: 79b6302eba825524a8e36ee558912d13, type: 3}
+  icon: {fileID: 21300000, guid: a90b6d55106b3614ab7e4b21249e241c, type: 3}
   description: Embedded with magical gems.
   baseValue: 90
-  rarity: 3
+  rarity: 8
   requiredLevel: 8
-  equipSlot: 6
-  weaponType: 2
+  equipSlot: 32
+  weaponType: 4
   attackPower: 15
   attackSpeed: 1.5
   durability: 40

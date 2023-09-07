@@ -17,7 +17,7 @@ public enum PotionEffect
     Invisibility = 1 << 7,
     Invincibility = 1 << 8,
     Poison = 1 << 9,
-    SlowTime = 1 << 10,
+    Transformation = 1 << 10,
     Haste = 1 << 11,
     Teleportation = 1 << 12,
     Freeze = 1 << 13,
@@ -38,5 +38,5 @@ public enum PotionEffect
     Intangibility = 1 << 28,
     FeatherWeight = 1 << 29,
     MagnifySenses = 1 << 30,
-    AntiMagic = 1 << 31,
+    AntiMagic = 1 << 31
 }

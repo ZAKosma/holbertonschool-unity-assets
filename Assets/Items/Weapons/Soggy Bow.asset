@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Soggy Bow
   m_EditorClassIdentifier: 
   itemName: Soggy Bow
-  icon: {fileID: 21300000, guid: 8bbe58e4aa0671146b95bf9318ad3a17, type: 3}
+  icon: {fileID: 21300000, guid: 1600fc3adc09b614bad909d0f5f8adad, type: 3}
   description: Made of wet twigs. Not very effective.
   baseValue: 33.03
   rarity: 1
   requiredLevel: 2
-  equipSlot: 4
-  weaponType: 1
+  equipSlot: 32
+  weaponType: 2
   attackPower: 8
   attackSpeed: 1.2
   durability: 60

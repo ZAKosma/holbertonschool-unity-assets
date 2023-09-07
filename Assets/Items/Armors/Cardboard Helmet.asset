@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Cardboard Helmet
   m_EditorClassIdentifier: 
   itemName: Cardboard Helmet
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: bc0e58db34ff86242b299e904c7c3263, type: 3}
   description: Surprisingly not as protective as it looks.
   baseValue: 1
-  rarity: 0
+  rarity: 1
   requiredLevel: 1
   equipSlot: 1
-  armorType: 0
+  armorType: 1
   defensePower: 1
   resistance: 0
   weight: 0.1

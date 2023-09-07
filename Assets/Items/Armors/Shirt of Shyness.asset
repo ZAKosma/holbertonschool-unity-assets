@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shirt of Shyness
   m_EditorClassIdentifier: 
   itemName: Shirt of Shyness
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: aed31dc09d6cf9043b18c2e70126e838, type: 3}
   description: Makes you feel incredibly self-conscious.
   baseValue: 15
   rarity: 1

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fd7be83707330f4184b7cc046475201, type: 3}
+  m_Name: Backward Berry Blast
+  m_EditorClassIdentifier: 
+  itemName: Backward Berry Blast
+  icon: {fileID: 21300000, guid: 3e8ad5cdc194f054fb2c9a89c5fc00e0, type: 3}
+  description: Can only walk backward & hum rewind noises.
+  baseValue: 590
+  rarity: 16
+  requiredLevel: 22
+  equipSlot: 0
+  potionEffect: 2048
+  effectPower: 2
+  duration: 150
+  cooldown: 35
+  isStackable: 0

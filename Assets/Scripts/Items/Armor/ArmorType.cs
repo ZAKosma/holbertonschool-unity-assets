@@ -24,5 +24,6 @@ public enum ArmorType
     Kevlar = 1 << 16,       // Modern armor type, offers high protection against projectiles.
     Titanium = 1 << 17,     // Exceptionally strong and lightweight, used in advanced armors.
     Cybernetic = 1 << 18,   // Futuristic armor with integrated technology and gadgets.
-    Elemental = 1 << 19     // Provides strong resistance against elemental attacks like fire, ice, etc.
+    Elemental = 1 << 19,     // Provides strong resistance against elemental attacks like fire, ice, etc.
+    Wood = 1 << 20          // Well, it's wood.
 }

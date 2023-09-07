@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Ban Hammer
   m_EditorClassIdentifier: 
   itemName: Ban Hammer
-  icon: {fileID: 21300000, guid: 00e303892f204ac4885ef51d927d8c08, type: 3}
+  icon: {fileID: 21300000, guid: 665441e13f752f24d84fce3461a79d0e, type: 3}
   description: For game moderators only.
   baseValue: 999
   rarity: 4
   requiredLevel: 99
-  equipSlot: 6
-  weaponType: 6
+  equipSlot: 32
+  weaponType: 64
   attackPower: 999
   attackSpeed: 0.1
   durability: 999

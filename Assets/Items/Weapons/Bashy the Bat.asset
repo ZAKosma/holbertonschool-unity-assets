@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Bashy the Bat
   m_EditorClassIdentifier: 
   itemName: Bashy the Bat
-  icon: {fileID: 21300000, guid: da71f932540d7014f9df15ae0a1b5562, type: 3}
+  icon: {fileID: 21300000, guid: 29ce831299ce45144bd9197125f1a389, type: 3}
   description: Great for baseball too!
   baseValue: 30
   rarity: 1
   requiredLevel: 2
-  equipSlot: 4
-  weaponType: 6
+  equipSlot: 8
+  weaponType: 64
   attackPower: 8
   attackSpeed: 1.2
   durability: 100

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Speary McSpearface
   m_EditorClassIdentifier: 
   itemName: Speary McSpearface
-  icon: {fileID: 21300000, guid: 86eca93e7e8b08346afb80365967d606, type: 3}
+  icon: {fileID: 21300000, guid: b6e121b3356b95c4d89285c5309bb953, type: 3}
   description: Named by the people.
   baseValue: 55
-  rarity: 0
+  rarity: 1
   requiredLevel: 3
-  equipSlot: 4
-  weaponType: 11
+  equipSlot: 32
+  weaponType: 2048
   attackPower: 16
   attackSpeed: 1.3
   durability: 60

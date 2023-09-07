@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Spear of Destiny
   m_EditorClassIdentifier: 
   itemName: Spear of Destiny
-  icon: {fileID: 21300000, guid: 471284a4de34d604db5236fe83b08f34, type: 3}
+  icon: {fileID: 21300000, guid: d5665118cd0746b4aa24b0986cd93d1a, type: 3}
   description: Choose your fate.
   baseValue: 100
-  rarity: 3
+  rarity: 16
   requiredLevel: 8
-  equipSlot: 6
-  weaponType: 11
+  equipSlot: 32
+  weaponType: 2048
   attackPower: 30
   attackSpeed: 1
   durability: 100

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Longscale Fish
+  m_EditorClassIdentifier: 
+  itemName: Longscale Fish
+  icon: {fileID: 21300000, guid: 17cdfeeb306f49e489102c7da0e59c05, type: 3}
+  description: It's quite slimey.
+  baseValue: 5
+  rarity: 1
+  requiredLevel: 1
+  equipSlot: 16
+  weaponType: 32
+  attackPower: 1
+  attackSpeed: 0.5
+  durability: 3
+  range: 1
+  criticalHitChance: 0.1

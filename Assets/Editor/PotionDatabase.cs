@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEditor;
 
-public class PotionDatabase : EditorWindow
+public class PotionDatabase : ItemDatabase<Potion>
 {
-    private Vector2 scrollPosition;
-    private Potion selectedItem;
-    private string searchString = "";
-    private float propertiesSectionWidth = 400f; // Default width for properties section
+    private PotionFilterOptions filterOptions = new PotionFilterOptions();
 
-    private bool isResizingPropertiesSection; // New flag for resizing
+    private bool showFilterOptions = false; // Variable to toggle the collapsible menu
+    
+    private List<Potion> sortedPotions;
 
-    private Texture2D defaultIcon; // Declare a variable for the default icon
 
     [MenuItem("Window/Item Manager/Potion Database")]
     public static void ShowWindow()
@@ -21,122 +21,47 @@ public class PotionDatabase : EditorWindow
         GetWindow<PotionDatabase>("Potion Database");
     }
 
-    private void OnEnable()
+
+    protected override IEnumerable<Potion> ApplyFilter(IEnumerable<Potion> Potions)
     {
-        // Load the default icon from your Resources folder (or any other path)
-        defaultIcon = Resources.Load<Texture2D>("DefaultIcon");
-        InitializeDefaultFilterOptions();
-    }
-
-    private void OnGUI()
-    {
-        // Start Horizontal layout
-        GUILayout.BeginHorizontal();
-
-        // Potions List Section
-        DrawPotionsList();
-
-        // Draw divider
-        DrawDividerAndHandle();
-
-        // Properties Section
-        GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(propertiesSectionWidth));
-        DrawPropertiesSection();
-        GUILayout.EndVertical();
-
-        GUILayout.EndHorizontal(); // End Horizontal layout
-
-        // Resize handle logic
-        HandleDividerDrag();
-    }
-
-    private void DrawPotionsList()
-    {
-        float PotionsListWidth = position.width - propertiesSectionWidth - 5;
-        GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(PotionsListWidth));
-
-        // Top Left Options
-        DrawTopLeftOptions();
-
-        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
-        string[] guids = AssetDatabase.FindAssets("t:Potion");
-        IEnumerable<Potion> Potions = guids.Select(guid =>
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            return AssetDatabase.LoadAssetAtPath<Potion>(path);
-        });
-        Potions = ApplyFilter(Potions); // Apply the filter
-        foreach (Potion Potion in Potions)
-        {
-            if (!string.IsNullOrEmpty(searchString) &&
-                !Potion.itemName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            Texture2D iconTexture =
-                Potion.icon != null ? Potion.icon.texture : defaultIcon; // Use default icon if Potion's icon is null
-
-            // Draw the elements
-            Rect rect = EditorGUILayout.BeginHorizontal(GUI.skin.box);
-            if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-            {
-                selectedItem = Potion;
-                Selection.activeObject = Potion;
-                Event.current.Use();
-            }
-
-            GUILayout.Box(iconTexture, GUILayout.Width(30), GUILayout.Height(30));
-            GUILayout.Label(Potion.itemName);
-            EditorGUILayout.EndHorizontal();
-        }
-
-        EditorGUILayout.EndScrollView();
-
-        GUILayout.EndVertical();
-    }
-
-
-    private IEnumerable<Potion> ApplyFilter(IEnumerable<Potion> Potions)
-    {
-        if (filterOptions.potionEffectMask != 0)
-            Potions = Potions.Where(w => (filterOptions.potionEffectMask & (PotionEffect)(1 << (int)w.potionEffect)) != 0);
-        if (filterOptions.minEffectPower != null)
-            Potions = Potions.Where(w => w.effectPower >= filterOptions.minEffectPower.Value);
-        if (filterOptions.maxEffectPower != null)
-            Potions = Potions.Where(w => w.effectPower <= filterOptions.maxEffectPower.Value);
-        if (filterOptions.minDuration != null)
-            Potions = Potions.Where(w => w.duration >= filterOptions.minDuration.Value);
-        if (filterOptions.maxDuration != null)
-            Potions = Potions.Where(w => w.duration <= filterOptions.maxDuration.Value);
-        if (filterOptions.minCooldown != null)
-            Potions = Potions.Where(w => w.cooldown >= filterOptions.minCooldown.Value);
-        if (filterOptions.maxCooldown != null)
-            Potions = Potions.Where(w => w.cooldown <= filterOptions.maxCooldown.Value);
-        // if (filterOptions.isStackable != null)
-        //     Potions = Potions.Where(w => w.isStackable == filterOptions.isStackable.Value);
-        if (filterOptions.rarityMask != 0)
-            Potions = Potions.Where(w => (filterOptions.rarityMask & (Rarity)(1 << (int)w.rarity)) != 0);
-        if (filterOptions.minBaseValue != null)
-            Potions = Potions.Where(w => w.baseValue >= filterOptions.minBaseValue.Value);
-        if (filterOptions.maxBaseValue != null)
-            Potions = Potions.Where(w => w.baseValue <= filterOptions.maxBaseValue.Value);
-        if (filterOptions.minRequiredLevel != null)
-            Potions = Potions.Where(w => w.requiredLevel >= filterOptions.minRequiredLevel.Value);
-        if (filterOptions.maxRequiredLevel != null)
-            Potions = Potions.Where(w => w.requiredLevel <= filterOptions.maxRequiredLevel.Value);
-        // if (filterOptions.equipSlotMask != 0)
-        //     Potions = Potions.Where(w => (filterOptions.equipSlotMask & (EquipSlot)(1 << (int)w.equipSlot)) != 0);
-
-        // Add more filtering logic as needed
+        // if (filterOptions.potionEffectMask != 0)
+        //     Potions = Potions.Where(w => (filterOptions.potionEffectMask & (PotionEffect)(1 << (int)w.potionEffect)) != 0);
+        // if (filterOptions.minEffectPower != null)
+        //     Potions = Potions.Where(w => w.effectPower >= filterOptions.minEffectPower.Value);
+        // if (filterOptions.maxEffectPower != null)
+        //     Potions = Potions.Where(w => w.effectPower <= filterOptions.maxEffectPower.Value);
+        // if (filterOptions.minDuration != null)
+        //     Potions = Potions.Where(w => w.duration >= filterOptions.minDuration.Value);
+        // if (filterOptions.maxDuration != null)
+        //     Potions = Potions.Where(w => w.duration <= filterOptions.maxDuration.Value);
+        // if (filterOptions.minCooldown != null)
+        //     Potions = Potions.Where(w => w.cooldown >= filterOptions.minCooldown.Value);
+        // if (filterOptions.maxCooldown != null)
+        //     Potions = Potions.Where(w => w.cooldown <= filterOptions.maxCooldown.Value);
+        // // if (filterOptions.isStackable != null)
+        // //     Potions = Potions.Where(w => w.isStackable == filterOptions.isStackable.Value);
+        // if (filterOptions.rarityMask != 0)
+        //     Potions = Potions.Where(w => (filterOptions.rarityMask & (Rarity)(1 << (int)w.rarity)) != 0);
+        // if (filterOptions.minBaseValue != null)
+        //     Potions = Potions.Where(w => w.baseValue >= filterOptions.minBaseValue.Value);
+        // if (filterOptions.maxBaseValue != null)
+        //     Potions = Potions.Where(w => w.baseValue <= filterOptions.maxBaseValue.Value);
+        // if (filterOptions.minRequiredLevel != null)
+        //     Potions = Potions.Where(w => w.requiredLevel >= filterOptions.minRequiredLevel.Value);
+        // if (filterOptions.maxRequiredLevel != null)
+        //     Potions = Potions.Where(w => w.requiredLevel <= filterOptions.maxRequiredLevel.Value);
+        // // if (filterOptions.equipSlotMask != 0)
+        // //     Potions = Potions.Where(w => (filterOptions.equipSlotMask & (EquipSlot)(1 << (int)w.equipSlot)) != 0);
+        //
+        // // Add more filtering logic as needed
 
         return Potions;
     }
 
 
-    private PotionFilterOptions filterOptions = new PotionFilterOptions();
 
-    private bool showFilterOptions = false; // Variable to toggle the collapsible menu
 
-    private void DrawFilterOptions()
+    protected override void DrawFilterOptions()
     {
         EditorGUILayout.BeginVertical(GUI.skin.box);
 
@@ -160,168 +85,104 @@ public class PotionDatabase : EditorWindow
 
         EditorGUILayout.EndVertical();
     }
-    
-    // Helper method to draw min-max range filters
-    private void DrawRangeFilter(string label, ref float? minValue, ref float? maxValue)
+
+    protected override void ResetFilterOptions()
     {
-        EditorGUILayout.BeginHorizontal();
-        minValue = EditorGUILayout.FloatField("Min " + label + ":", minValue ?? 0f);
-        maxValue = EditorGUILayout.FloatField("Max " + label + ":", maxValue ?? 0f);
-        EditorGUILayout.EndHorizontal();
-    }
-    private void DrawRangeFilter(string label, ref int? minValue, ref int? maxValue)
-    {
-        EditorGUILayout.BeginHorizontal();
-        minValue = EditorGUILayout.IntField("Min " + label + ":", minValue ?? 0);
-        maxValue = EditorGUILayout.IntField("Max " + label + ":", maxValue ?? 0);
-        EditorGUILayout.EndHorizontal();
+        filterOptions = new PotionFilterOptions(); // Assuming FilterOptions has default values that include all objects
+        InitializeDefaultFilterOptions(); // Resets the filters to default values    }
     }
 
-
-    private void DrawTopLeftOptions()
+    protected override bool IsValid(Potion item, out string issue)
     {
-        DrawFilterOptions();
-        // Create Potion
-        GUILayout.Label("Create New Potion:", EditorStyles.boldLabel);
-        if (GUILayout.Button("Open Potion Creation Window", GUILayout.Height(30)))
+        issue = string.Empty;
+
+        // Check for null or empty name
+        if (string.IsNullOrEmpty(item.itemName))
         {
-            PotionCreation.ShowWindow();
+            issue = "Name is null or empty.";
+            return false;
         }
 
-        // Search Bar
-        searchString = EditorGUILayout.TextField("Search:", searchString, GUILayout.Height(20));
-
-        // Sorting Options
-        // EditorGUILayout.BeginHorizontal();
-        // GUILayout.Label("Sort By:");
-        // if (GUILayout.Button("Potion Type")) SortPotionsBy(Potion => Potion.PotionType);
-        // if (GUILayout.Button("Equip Slot")) SortPotionsBy(Potion => Potion.equipSlot);
-        // // Add more sorting options as needed
-        // EditorGUILayout.EndHorizontal();
-
-        // Import & Export
-        if (GUILayout.Button("Export to CSV")) ExportPotionsToCSV();
-        if (GUILayout.Button("Import from CSV")) ImportPotionsFromCSV();
-
-        // Delete & Duplicate
-        if (GUILayout.Button("Delete Selected Potion")) DeleteSelectedPotion();
-        if (GUILayout.Button("Duplicate Selected Potion")) DuplicateSelectedPotion();
-    }
-
-    private void DrawPropertiesSection()
-    {
-        // Make the "Properties Section:" label bold
-        GUILayout.Label("Properties Section:", EditorStyles.boldLabel);
-        if (selectedItem != null)
+        // Check for special characters in name
+        if (item.itemName.Any(ch => !char.IsLetterOrDigit(ch) && ch != ' ' && ch != '-' && ch != '\''))
         {
-            // Increase spacing between properties for better layout
-            EditorGUIUtility.labelWidth = 140;
-            EditorGUILayout.Space();
-            DrawSelectedPotionProperties(selectedItem);
+            issue = "Name contains special characters.";
+            return false;
         }
-    }
-
-    private void DrawDividerAndHandle()
-    {
-        // Draw background color
-        Rect rect = GUILayoutUtility.GetRect(5, 5, position.height, 5);
-        EditorGUI.DrawRect(rect, new Color(0.6f, 0.6f, 0.6f));
-
-        // Draw handle texture (using Unity's built-in texture)
-        GUIStyle resizeHandleStyle = new GUIStyle();
-        resizeHandleStyle.normal.background = EditorGUIUtility.Load("icons/d_AvatarBlendBackground.png") as Texture2D;
-        GUI.Box(new Rect(rect.x, rect.y, rect.width, rect.height), "", resizeHandleStyle);
-
-        EditorGUIUtility.AddCursorRect(rect, MouseCursor.ResizeHorizontal);
-
-        if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+        
+        if (duplicateNames.Contains(item.itemName))
         {
-            isResizingPropertiesSection = true;
-        }
-    }
-
-
-    private void HandleDividerDrag()
-    {
-        if (isResizingPropertiesSection)
-        {
-            propertiesSectionWidth -= Event.current.delta.x;
-            // Ensure the properties section width is within bounds
-            float maxPropertiesSectionWidth = position.width * 0.8f; // 80% of the window's width
-            propertiesSectionWidth = Mathf.Clamp(propertiesSectionWidth, 200, maxPropertiesSectionWidth);
-            Repaint();
+            issue = "Duplicate name.";
+            return false;
         }
 
-        if (Event.current.type == EventType.MouseUp)
-        {
-            isResizingPropertiesSection = false;
-        }
+        // Add any more checks you need here.
+        // ...
+
+        return true;
     }
 
-
-    private void DrawSelectedPotionProperties(Potion Potion)
+    protected override void DrawSelectedItemProperties(Potion item)
     {
         EditorGUI.BeginChangeCheck();
 
         // Icon Section - Placed above the name for a more aesthetic look
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace(); // Center the icon
-        Potion.icon = (Sprite)EditorGUILayout.ObjectField(Potion.icon, typeof(Sprite), false, GUILayout.Height(64),
+        item.icon = (Sprite)EditorGUILayout.ObjectField(item.icon, typeof(Sprite), false, GUILayout.Height(64),
             GUILayout.Width(64));
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        
+        string issue;
+        bool isValid = IsValid(item, out issue);
+
+        GUIStyle textStyle = new GUIStyle(EditorStyles.largeLabel);
+        if (!isValid)
+        {
+            textStyle.normal.textColor = Color.red;
+        }
 
         // Name Section - Make the name prominent
         EditorGUILayout.LabelField("Name:", EditorStyles.boldLabel);
-        Potion.itemName = EditorGUILayout.TextField(string.Empty, Potion.itemName, EditorStyles.largeLabel);
+        item.itemName = EditorGUILayout.TextField(string.Empty, item.itemName, textStyle);
+        
+        // If invalid, display the issue
+        if (!isValid)
+        {
+            EditorGUILayout.HelpBox(issue, MessageType.Error);
+        }
+        
         EditorGUILayout.Space(); // Add some space for better separation
 
         // Other General Properties
-        Potion.description = EditorGUILayout.TextField("Description:", Potion.description);
-        Potion.baseValue = EditorGUILayout.FloatField("Base Value:", Potion.baseValue);
-        Potion.rarity = (Rarity)EditorGUILayout.EnumPopup("Rarity:", Potion.rarity);
-        Potion.requiredLevel = EditorGUILayout.IntField("Required Level:", Potion.requiredLevel);
-        Potion.equipSlot = (EquipSlot)EditorGUILayout.EnumPopup("Equip Slot:", Potion.equipSlot);
+        item.description = EditorGUILayout.TextField("Description:", item.description);
+        item.baseValue = EditorGUILayout.FloatField("Base Value:", item.baseValue);
+        item.rarity = (Rarity)EditorGUILayout.EnumPopup("Rarity:", item.rarity);
+        item.requiredLevel = EditorGUILayout.IntField("Required Level:", item.requiredLevel);
 
         // Potion Specific Properties
         EditorGUILayout.Space();
         GUILayout.Label("Potion Properties:", EditorStyles.boldLabel);
-        Potion.potionEffect = (PotionEffect)EditorGUILayout.EnumPopup("Potion Type:", Potion.potionEffect);
-        Potion.effectPower = EditorGUILayout.FloatField("Effect Power:", Potion.effectPower);
-        Potion.duration = EditorGUILayout.FloatField("Attack Speed:", Potion.duration);
-        Potion.cooldown = EditorGUILayout.FloatField("Durability:", Potion.cooldown);
-        // Potion.isStackable = EditorGUILayout.Toggle("Is Stackable", Potion.isStackable);
+        item.potionEffect = (PotionEffect)EditorGUILayout.EnumPopup("Potion Effect:", item.potionEffect);
+        item.effectPower = EditorGUILayout.FloatField("Effect Power:", item.effectPower);
+        item.duration = EditorGUILayout.FloatField("Duration:", item.duration);
+        item.cooldown = EditorGUILayout.FloatField("Cooldown:", item.cooldown);
+        item.isStackable = EditorGUILayout.Toggle("Is Stackable:", item.isStackable);
 
         // Statistics and Information (example)
-        EditorGUILayout.Space();
-        GUILayout.Label("Potion Statistics:", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField($"Uniqueness Score: {CalculateUniquenessScore(Potion)}%");
-        EditorGUILayout.LabelField($"Damage Spectrum: {CalculateDamageSpectrum(Potion)}");
+        // EditorGUILayout.Space();
+        // GUILayout.Label("Weapon Statistics:", EditorStyles.boldLabel);
+        // EditorGUILayout.LabelField($"Uniqueness Score: {CalculateUniquenessScore(item)}%");
+        // EditorGUILayout.LabelField($"Damage Spectrum: {CalculateDamageSpectrum(item)}");
 
         if (EditorGUI.EndChangeCheck())
         {
-            EditorUtility.SetDirty(Potion);
+            EditorUtility.SetDirty(item);
             AssetDatabase.SaveAssets();
         }
     }
 
-    private float CalculateUniquenessScore(Potion Potion)
-    {
-        // Implement a method to calculate how unique the Potion is based on its properties
-        // ...
-
-        return 0f;
-    }
-
-    private string CalculateDamageSpectrum(Potion Potion)
-    {
-        // Implement a method to determine where the Potion falls on the damage spectrum
-        // ...
-
-        return "Medium";
-    }
-
-    private List<Potion> sortedPotions;
 
     private void DeleteSelectedPotion()
     {
@@ -343,21 +204,81 @@ public class PotionDatabase : EditorWindow
         }
     }
 
-    private void ExportPotionsToCSV()
+    public override void ExportItemsToCSV(string savePath)
     {
-        // Your CSV exporting logic here
+        string[] guids = AssetDatabase.FindAssets("t:Potion");
+        IEnumerable<Potion> items = guids.Select(guid =>
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            return AssetDatabase.LoadAssetAtPath<Potion>(assetPath);
+        });
+    
+        StringBuilder sb = new StringBuilder();
+
+        // Writing the header
+        sb.AppendLine("\"Item Name\",\"Icon Path\",\"Potion Effect\",\"Effect Power\",\"Duration\",\"Cooldown\",\"IsStackable\",\"Base Value\",\"Rarity\",\"Required Level\",\"Description\"");
+
+        foreach (Potion p in items)
+        {
+            string iconPath = AssetDatabase.GetAssetPath(p.icon);
+            sb.AppendLine($"\"{p.itemName}\",\"{iconPath}\",{p.potionEffect},{p.effectPower},{p.duration},{p.cooldown},{p.isStackable},{p.baseValue},{p.rarity},{p.requiredLevel},\"{p.description}\"");
+        }
+
+        File.WriteAllText(savePath, sb.ToString());
     }
 
-    private void ImportPotionsFromCSV()
+    public override void ImportItemsFromCSV(string path)
     {
-        // Your CSV exporting logic here
+        HashSet<string> existingNames = new HashSet<string>();
+        StreamReader reader = new StreamReader(File.OpenRead(path));
+        reader.ReadLine(); // Skip the first line (header)
+
+        while (!reader.EndOfStream)
+        {
+            string line = reader.ReadLine();
+            string[] values = line.Split(',');
+            
+            // Check for duplicate items
+            if (existingNames.Contains(values[0]))
+            {
+                Debug.LogWarning($"Duplicate item name found: {values[0]}");
+                continue;
+            }
+
+            Potion potion = ScriptableObject.CreateInstance<Potion>();
+            potion.itemName = values.Length > 0 ? values[0].Trim('"') : "Unnamed";
+            
+            // Check for missing fields
+            if (values.Length < 11)
+            {
+                Debug.LogWarning($"Missing fields for item: {potion.itemName} (total count " + values.Length + ".)");
+            }
+            
+            potion.icon = values.Length > 1 ? AssetDatabase.LoadAssetAtPath<Sprite>(values[1].Trim('"')) : null;
+            potion.potionEffect = values.Length > 2 ? (PotionEffect)System.Enum.Parse(typeof(PotionEffect), values[2]) : PotionEffect.None;
+            potion.effectPower = values.Length > 3 ? float.Parse(values[3]) : 0f;
+            potion.duration = values.Length > 4 ? float.Parse(values[4]) : 0f;
+            potion.cooldown = values.Length > 5 ? float.Parse(values[5]) : 0f;
+            potion.isStackable = values.Length > 6 && bool.Parse(values[6]);
+            potion.baseValue = values.Length > 7 ? float.Parse(values[7]) : 0f;
+            potion.rarity = values.Length > 8 ? (Rarity)System.Enum.Parse(typeof(Rarity), values[8]) : Rarity.Common;
+            potion.requiredLevel = values.Length > 9 ? int.Parse(values[9]) : 0;
+            potion.description = values.Length > 10 ? values[10].Trim('"') : "No description";
+
+            potion.equipSlot = EquipSlot.Null;
+
+            existingNames.Add(potion.itemName);
+            AssetDatabase.CreateAsset(potion, $"Assets/Items/Potions/{potion.itemName}.asset");
+        }
+
+        reader.Close();
+        AssetDatabase.Refresh(); // Refresh the asset database to show new items
     }
-    
-    private void InitializeDefaultFilterOptions()
+
+    protected override void InitializeDefaultFilterOptions()
     {
         filterOptions.potionEffectMask = (PotionEffect)Enum.GetValues(typeof(PotionEffect)).Cast<int>().Sum();
         filterOptions.rarityMask = (Rarity)Enum.GetValues(typeof(Rarity)).Cast<int>().Sum();
-        // filterOptions.equipSlotMask = (EquipSlot)Enum.GetValues(typeof(EquipSlot)).Cast<int>().Sum();
 
         // Load all Potions
         string[] guids = AssetDatabase.FindAssets("t:Potion");

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Staff of Snakes
   m_EditorClassIdentifier: 
   itemName: Staff of Snakes
-  icon: {fileID: 21300000, guid: e875552135d94cf4398bcf072e09a893, type: 3}
+  icon: {fileID: 21300000, guid: 9344d2db49c75344b9ae1107c474c7d6, type: 3}
   description: Snakes not included.
   baseValue: 80
-  rarity: 2
+  rarity: 4
   requiredLevel: 5
-  equipSlot: 6
-  weaponType: 2
+  equipSlot: 32
+  weaponType: 4
   attackPower: 20
   attackSpeed: 1.5
   durability: 60

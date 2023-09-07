@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Grandma's Knitted Coif
   m_EditorClassIdentifier: 
   itemName: Grandma's Knitted Coif
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fc67430e381dee84bacc43e167c8d7a4, type: 3}
   description: It's warm and full of love. Defense value questionable.
   baseValue: 20
-  rarity: 3
+  rarity: 1
   requiredLevel: 6
   equipSlot: 1
-  armorType: 9
+  armorType: 4
   defensePower: 10
   resistance: 5
   weight: 1

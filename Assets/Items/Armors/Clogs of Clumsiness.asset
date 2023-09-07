@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Clogs of Clumsiness
   m_EditorClassIdentifier: 
   itemName: Clogs of Clumsiness
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 6fc3a2c99c15aa943b8624cc41fffcfd, type: 3}
   description: Not great for running. Or walking.
   baseValue: 5
-  rarity: 0
+  rarity: 1
   requiredLevel: 1
-  equipSlot: 3
-  armorType: 0
+  equipSlot: 4
+  armorType: 4
   defensePower: -5
   resistance: 0
   weight: 5

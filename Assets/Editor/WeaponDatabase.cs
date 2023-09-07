@@ -1,12 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
 using UnityEngine;
 using UnityEditor;
 
 public class WeaponDatabase : ItemDatabase<Weapon>
 {
 
+
+    private WeaponFilterOptions filterOptions = new WeaponFilterOptions();
+
+    private bool showFilterOptions = false; // Variable to toggle the collapsible menu
+    
+    private List<Weapon> sortedWeapons;
+
+    
     public WeaponDatabase()
     {
         this.minSize = new Vector2(600, 400); // Set the minimum size of the window
@@ -22,57 +33,67 @@ public class WeaponDatabase : ItemDatabase<Weapon>
 
     protected override IEnumerable<Weapon> ApplyFilter(IEnumerable<Weapon> weapons)
     {
-        // Filtering based on the search string
-        if (!string.IsNullOrEmpty(searchString))
-        {
-            weapons = weapons.Where(w => w.itemName.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-        }
-        if (filterOptions.weaponTypeMask != 0)
-            weapons = weapons.Where(w => (filterOptions.weaponTypeMask & (WeaponType)(1 << (int)w.weaponType)) != 0);
-        if (filterOptions.minAttackPower != null)
-            weapons = weapons.Where(w => w.attackPower >= filterOptions.minAttackPower.Value);
-        if (filterOptions.maxAttackPower != null)
-            weapons = weapons.Where(w => w.attackPower <= filterOptions.maxAttackPower.Value);
-        if (filterOptions.minAttackSpeed != null)
-            weapons = weapons.Where(w => w.attackSpeed >= filterOptions.minAttackSpeed.Value);
-        if (filterOptions.maxAttackSpeed != null)
-            weapons = weapons.Where(w => w.attackSpeed <= filterOptions.maxAttackSpeed.Value);
-        if (filterOptions.minDurability != null)
-            weapons = weapons.Where(w => w.durability >= filterOptions.minDurability.Value);
-        if (filterOptions.maxDurability != null)
-            weapons = weapons.Where(w => w.durability <= filterOptions.maxDurability.Value);
-        if (filterOptions.minRange != null)
-            weapons = weapons.Where(w => w.range >= filterOptions.minRange.Value);
-        if (filterOptions.maxRange != null)
-            weapons = weapons.Where(w => w.range <= filterOptions.maxRange.Value);
-        if (filterOptions.minCriticalHitChance != null)
-            weapons = weapons.Where(w => w.criticalHitChance >= filterOptions.minCriticalHitChance.Value);
-        if (filterOptions.maxCriticalHitChance != null)
-            weapons = weapons.Where(w => w.criticalHitChance <= filterOptions.maxCriticalHitChance.Value);
-        if (filterOptions.rarityMask != 0)
-            weapons = weapons.Where(w => (filterOptions.rarityMask & (Rarity)(1 << (int)w.rarity)) != 0);
-        if (filterOptions.minBaseValue != null)
-            weapons = weapons.Where(w => w.baseValue >= filterOptions.minBaseValue.Value);
-        if (filterOptions.maxBaseValue != null)
-            weapons = weapons.Where(w => w.baseValue <= filterOptions.maxBaseValue.Value);
-        if (filterOptions.minRequiredLevel != null)
-            weapons = weapons.Where(w => w.requiredLevel >= filterOptions.minRequiredLevel.Value);
-        if (filterOptions.maxRequiredLevel != null)
-            weapons = weapons.Where(w => w.requiredLevel <= filterOptions.maxRequiredLevel.Value);
-        if (filterOptions.equipSlotMask != 0)
-            weapons = weapons.Where(w => (filterOptions.equipSlotMask & (EquipSlot)(1 << (int)w.equipSlot)) != 0);
+        // Clear any previously seen names and duplicates.
+        namesSeen.Clear();
+        duplicateNames.Clear();
 
-        // Add more filtering logic as needed
-
-        return weapons;
+        // Apply all filters
+        var filteredWeapons = weapons;
+        
+        // // Filtering based on the search string
+        // if (!string.IsNullOrEmpty(searchString))
+        // {
+        //     filteredWeapons = filteredWeapons.Where(w => w.itemName.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+        // }
+        // if (filterOptions.weaponTypeMask != 0)
+        //     filteredWeapons = filteredWeapons.Where(w => (filterOptions.weaponTypeMask & (WeaponType)(1 << (int)w.weaponType)) != 0);
+        // if (filterOptions.minAttackPower != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.attackPower >= filterOptions.minAttackPower.Value);
+        // if (filterOptions.maxAttackPower != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.attackPower <= filterOptions.maxAttackPower.Value);
+        // if (filterOptions.minAttackSpeed != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.attackSpeed >= filterOptions.minAttackSpeed.Value);
+        // if (filterOptions.maxAttackSpeed != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.attackSpeed <= filterOptions.maxAttackSpeed.Value);
+        // if (filterOptions.minDurability != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.durability >= filterOptions.minDurability.Value);
+        // if (filterOptions.maxDurability != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.durability <= filterOptions.maxDurability.Value);
+        // if (filterOptions.minRange != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.range >= filterOptions.minRange.Value);
+        // if (filterOptions.maxRange != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.range <= filterOptions.maxRange.Value);
+        // if (filterOptions.minCriticalHitChance != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.criticalHitChance >= filterOptions.minCriticalHitChance.Value);
+        // if (filterOptions.maxCriticalHitChance != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.criticalHitChance <= filterOptions.maxCriticalHitChance.Value);
+        // if (filterOptions.rarityMask != 0)
+        //     filteredWeapons = filteredWeapons.Where(w => (filterOptions.rarityMask & (Rarity)(1 << (int)w.rarity)) != 0);
+        // if (filterOptions.minBaseValue != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.baseValue >= filterOptions.minBaseValue.Value);
+        // if (filterOptions.maxBaseValue != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.baseValue <= filterOptions.maxBaseValue.Value);
+        // if (filterOptions.minRequiredLevel != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.requiredLevel >= filterOptions.minRequiredLevel.Value);
+        // if (filterOptions.maxRequiredLevel != null)
+        //     filteredWeapons = filteredWeapons.Where(w => w.requiredLevel <= filterOptions.maxRequiredLevel.Value);
+        // if (filterOptions.equipSlotMask != 0)
+        //     filteredWeapons = filteredWeapons.Where(w => (filterOptions.equipSlotMask & (EquipSlot)(1 << (int)w.equipSlot)) != 0);
+        //
+        // // Force enumeration to apply all filters
+        // //filteredWeapons = filteredWeapons.ToList();
+        //
+        // // Checking for duplicate names
+        // foreach (var weapon in filteredWeapons.Where(weapon => !namesSeen.Add(weapon.itemName)))
+        // {
+        //     duplicateNames.Add(weapon.itemName);
+        // }
+    
+        return filteredWeapons;
     }
 
 
-    private WeaponFilterOptions filterOptions = new WeaponFilterOptions();
-
-    private bool showFilterOptions = false; // Variable to toggle the collapsible menu
-
-    private void DrawFilterOptions()
+    protected override void DrawFilterOptions()
     {
         EditorGUILayout.BeginVertical(GUI.skin.box);
 
@@ -106,84 +127,90 @@ public class WeaponDatabase : ItemDatabase<Weapon>
         EditorGUILayout.EndVertical();
     }
     
-    // Helper method to draw min-max range filters
-    private void DrawRangeFilter(string label, ref float? minValue, ref float? maxValue)
-    {
-        EditorGUILayout.BeginHorizontal();
-        minValue = EditorGUILayout.FloatField("Min " + label + ":", minValue ?? 0f);
-        maxValue = EditorGUILayout.FloatField("Max " + label + ":", maxValue ?? 0f);
-        EditorGUILayout.EndHorizontal();
-    }
-    private void DrawRangeFilter(string label, ref int? minValue, ref int? maxValue)
-    {
-        EditorGUILayout.BeginHorizontal();
-        minValue = EditorGUILayout.IntField("Min " + label + ":", minValue ?? 0);
-        maxValue = EditorGUILayout.IntField("Max " + label + ":", maxValue ?? 0);
-        EditorGUILayout.EndHorizontal();
-    }
+    
 
-
-    protected override void ExportItemsToCSV()
+    protected override bool IsValid(Weapon weapon, out string issue)
     {
-        throw new NotImplementedException();
-    }
+        issue = string.Empty;
 
-    protected override void ImportItemsFromCSV()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void DrawTopLeftOptions()
-    {
-        // Database Admin Functions
-        GUILayout.Label("Database Admin Functions:", EditorStyles.boldLabel);
-        if (GUILayout.Button("Export to CSV")) ExportWeaponsToCSV();
-        if (GUILayout.Button("Import from CSV")) ImportWeaponsFromCSV();
-        if (GUILayout.Button("Delete Selected Weapon")) DeleteSelectedWeapon();
-        if (GUILayout.Button("Duplicate Selected Weapon")) DuplicateSelectedWeapon();
-
-        // Create New Weapon
-        GUILayout.Label("Create New Weapon:", EditorStyles.boldLabel);
-        if (GUILayout.Button("Open Weapon Creation Window", GUILayout.Height(30)))
+        // Check for null or empty name
+        if (string.IsNullOrEmpty(weapon.itemName))
         {
-            WeaponCreation.ShowWindow();
+            issue = "Name is null or empty.";
+            return false;
         }
 
-        // Search
-        EditorGUILayout.BeginHorizontal();
-        searchString = EditorGUILayout.TextField("Search:", searchString, GUILayout.Height(20));
-        if (GUILayout.Button("X", GUILayout.Width(20)))
+        // Check for special characters in name
+        if (weapon.itemName.Any(ch => !char.IsLetterOrDigit(ch) && ch != ' ' && ch != '-' && ch != '\''))
         {
-            searchString = ""; // Clear search string
+            issue = "Name contains special characters.";
+            return false;
         }
-        EditorGUILayout.EndHorizontal();
         
-        // Filter Options
-        DrawFilterOptions();
-    }
+        if (duplicateNames.Contains(weapon.itemName))
+        {
+            issue = "Duplicate name.";
+            return false;
+        }
 
-    private void ResetFilterOptions()
+        // Add any more checks you need here.
+        // ...
+
+        return true;
+    }
+    
+
+    // private void DrawTopLeftOptions()
+    // {
+    //     // Database Admin Functions
+    //     // GUILayout.Label("Database Admin Functions:", EditorStyles.boldLabel);
+    //     // if (GUILayout.Button("Export to CSV")) ExportWeaponsToCSV();
+    //     // if (GUILayout.Button("Import from CSV")) ImportWeaponsFromCSV();
+    //     if (GUILayout.Button("Delete Selected Weapon")) DeleteSelectedWeapon();
+    //     if (GUILayout.Button("Duplicate Selected Weapon")) DuplicateSelectedWeapon();
+    //
+    //     // Create New Weapon
+    //     GUILayout.Label("Create New Weapon:", EditorStyles.boldLabel);
+    //     if (GUILayout.Button("Open Weapon Creation Window", GUILayout.Height(30)))
+    //     {
+    //         WeaponCreation.ShowWindow();
+    //     }
+    //
+    //     // Search
+    //     EditorGUILayout.BeginHorizontal();
+    //     searchString = EditorGUILayout.TextField("Search:", searchString, GUILayout.Height(20));
+    //     if (GUILayout.Button("X", GUILayout.Width(20)))
+    //     {
+    //         searchString = ""; // Clear search string
+    //     }
+    //     EditorGUILayout.EndHorizontal();
+    //     
+    //     // Filter Options
+    //     DrawFilterOptions();
+    // }
+
+    protected override void ResetFilterOptions()
     {
         filterOptions = new WeaponFilterOptions(); // Assuming FilterOptions has default values that include all objects
         InitializeDefaultFilterOptions(); // Resets the filters to default values
     }
 
 
-    protected override void DrawPropertiesSection()
-    {
-        // Make the "Properties Section:" label bold
-        GUILayout.Label("Properties Section:", EditorStyles.boldLabel);
-        if (selectedItem != null)
-        {
-            // Increase spacing between properties for better layout
-            EditorGUIUtility.labelWidth = 140;
-            EditorGUILayout.Space();
-            DrawSelectedWeaponProperties(selectedItem);
-        }
-    }
+    // protected override void DrawPropertiesSection()
+    // {
+    //     // Make the "Properties Section:" label bold
+    //     GUILayout.Label("Properties Section:", EditorStyles.boldLabel);
+    //     if (selectedItem != null)
+    //     {
+    //         // Increase spacing between properties for better layout
+    //         EditorGUIUtility.labelWidth = 140;
+    //         EditorGUILayout.Space();
+    //         DrawSelectedWeaponProperties(selectedItem);
+    //     }
+    // }
 
 
-    private void DrawSelectedWeaponProperties(Weapon weapon)
+    protected override void DrawSelectedItemProperties(Weapon weapon)
     {
         EditorGUI.BeginChangeCheck();
 
@@ -194,10 +221,26 @@ public class WeaponDatabase : ItemDatabase<Weapon>
             GUILayout.Width(64));
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        
+        string issue;
+        bool isValid = IsValid(weapon, out issue);
+
+        GUIStyle textStyle = new GUIStyle(EditorStyles.largeLabel);
+        if (!isValid)
+        {
+            textStyle.normal.textColor = Color.red;
+        }
 
         // Name Section - Make the name prominent
         EditorGUILayout.LabelField("Name:", EditorStyles.boldLabel);
-        weapon.itemName = EditorGUILayout.TextField(string.Empty, weapon.itemName, EditorStyles.largeLabel);
+        weapon.itemName = EditorGUILayout.TextField(string.Empty, weapon.itemName, textStyle);
+        
+        // If invalid, display the issue
+        if (!isValid)
+        {
+            EditorGUILayout.HelpBox(issue, MessageType.Error);
+        }
+        
         EditorGUILayout.Space(); // Add some space for better separation
 
         // Other General Properties
@@ -229,7 +272,7 @@ public class WeaponDatabase : ItemDatabase<Weapon>
             AssetDatabase.SaveAssets();
         }
     }
-    
+
     private Dictionary<WeaponType, int> CalculateWeaponTypeDistribution(IEnumerable<Weapon> weapons)
     {
         return weapons.GroupBy(w => w.weaponType)
@@ -326,7 +369,6 @@ public class WeaponDatabase : ItemDatabase<Weapon>
     }
 
 
-    private List<Weapon> sortedWeapons;
 
     private void DeleteSelectedWeapon()
     {
@@ -348,14 +390,75 @@ public class WeaponDatabase : ItemDatabase<Weapon>
         }
     }
 
-    private void ExportWeaponsToCSV()
+    public override void ImportItemsFromCSV(string path)
     {
-        // Your CSV exporting logic here
+        HashSet<string> existingNames = new HashSet<string>();
+        StreamReader reader = new StreamReader(File.OpenRead(path));
+        reader.ReadLine(); // Skip the first line (header)
+
+        while (!reader.EndOfStream)
+        {
+            string line = reader.ReadLine();
+            string[] values = line.Split(',');
+            
+            // Check for duplicate items
+            if (existingNames.Contains(values[0]))
+            {
+                Debug.LogWarning($"Duplicate item name found: {values[0]}");
+                continue;
+            }
+
+            Weapon weapon = ScriptableObject.CreateInstance<Weapon>();
+            weapon.itemName = values.Length > 0 ? values[0].Trim('"') : "Unnamed";
+            
+            // Check for missing fields
+            if (values.Length < 13)
+            {
+                Debug.LogWarning($"Missing fields for item: {weapon.itemName}");
+            }
+            
+            weapon.icon = values.Length > 1 ? AssetDatabase.LoadAssetAtPath<Sprite>(values[1].Trim('"')) : null;
+            weapon.weaponType = values.Length > 2 ? (WeaponType)System.Enum.Parse(typeof(WeaponType), values[2]) : WeaponType.None;
+            weapon.attackPower = values.Length > 3 ? float.Parse(values[3]) : 0f;
+            weapon.attackSpeed = values.Length > 4 ? float.Parse(values[4]) : 0f;
+            weapon.durability = values.Length > 5 ? float.Parse(values[5]) : 0f;
+            weapon.range = values.Length > 6 ? float.Parse(values[6]) : 0f;
+            weapon.criticalHitChance = values.Length > 7 ? float.Parse(values[7]) : 0f;
+            weapon.baseValue = values.Length > 8 ? float.Parse(values[8]) : 0f;
+            weapon.rarity = values.Length > 9 ? (Rarity)System.Enum.Parse(typeof(Rarity), values[9]) : Rarity.Common;
+            weapon.requiredLevel = values.Length > 10 ? int.Parse(values[10]) : 0;
+            weapon.equipSlot = values.Length > 11 ? (EquipSlot)System.Enum.Parse(typeof(EquipSlot), values[11]) : EquipSlot.Null;
+            weapon.description = values.Length > 12 ? values[12].Trim('"') : "No description";
+
+            existingNames.Add(weapon.itemName);
+            AssetDatabase.CreateAsset(weapon, $"Assets/Items/Weapons/{weapon.itemName}.asset");
+        }
+
+        reader.Close();
+        AssetDatabase.Refresh(); // Refresh the asset database to show new items
     }
 
-    private void ImportWeaponsFromCSV()
+    public override void ExportItemsToCSV(string savePath)
     {
-        // Your CSV exporting logic here
+        string[] guids = AssetDatabase.FindAssets("t:Weapon");
+        IEnumerable<Weapon> items = guids.Select(guid =>
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            return AssetDatabase.LoadAssetAtPath<Weapon>(assetPath);
+        });
+    
+        StringBuilder sb = new StringBuilder();
+
+        // Writing the header
+        sb.AppendLine("\"Item Name\",\"Icon Path\",\"Weapon Type\",\"Attack Power\",\"Attack Speed\",\"Durability\",\"Range\",\"Critical Hit Chance\",\"Base Value\",\"Rarity\",\"Required Level\",\"Equip Slot\",\"Description\"");
+
+        foreach (Weapon weapon in items)
+        {
+            string iconPath = AssetDatabase.GetAssetPath(weapon.icon);
+            sb.AppendLine($"\"{weapon.itemName}\",\"{iconPath}\",{weapon.weaponType},{weapon.attackPower},{weapon.attackSpeed},{weapon.durability},{weapon.range},{weapon.criticalHitChance},{weapon.baseValue},{weapon.rarity},{weapon.requiredLevel},{weapon.equipSlot},\"{weapon.description}\"");
+        }
+
+        File.WriteAllText(savePath, sb.ToString());
     }
     
     protected override void InitializeDefaultFilterOptions()

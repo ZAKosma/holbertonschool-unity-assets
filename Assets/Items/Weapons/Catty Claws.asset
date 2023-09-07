@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Catty Claws
   m_EditorClassIdentifier: 
   itemName: Catty Claws
-  icon: {fileID: 21300000, guid: 4d37e04491b69714dadb6707c995245a, type: 3}
+  icon: {fileID: 21300000, guid: aaafd2b5fcd37494291e5dc76f0af6ec, type: 3}
   description: For the feline in you.
   baseValue: 60
   rarity: 2
   requiredLevel: 5
-  equipSlot: 5
-  weaponType: 12
+  equipSlot: 16
+  weaponType: 4096
   attackPower: 14
   attackSpeed: 2.5
   durability: 40

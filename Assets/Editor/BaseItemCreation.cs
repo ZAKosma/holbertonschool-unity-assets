@@ -11,6 +11,11 @@ public abstract class BaseItemCreation<T> : EditorWindow where T : BaseItem
     protected float baseValue;
     protected int requiredLevel;
     protected Rarity rarity;
+    
+    public static void ShowWindow()
+    {
+        EditorWindow.GetWindow(typeof(BaseItemCreation<T>), true, "Create New Item");
+    }
 
     protected void DrawCommonFields()
     {
@@ -32,7 +37,14 @@ public abstract class BaseItemCreation<T> : EditorWindow where T : BaseItem
         {
             folderPath += "Weapons/";
         }
-        // Add more conditions for other types
+        else if (typeof(T) == typeof(Armor))
+        {
+            folderPath += "Armor/";
+        }
+        else if (typeof(T) == typeof(Potion))
+        {
+            folderPath += "Potions/";
+        }
 
         // Create the directory if it doesn't exist
         if (!AssetDatabase.IsValidFolder(folderPath))
@@ -43,6 +55,7 @@ public abstract class BaseItemCreation<T> : EditorWindow where T : BaseItem
 
         // Define the full path for the asset
         string fullPath = folderPath + itemName + ".asset";
+        fullPath = AssetDatabase.GenerateUniqueAssetPath(fullPath);
 
         AssetDatabase.CreateAsset(newItem, fullPath);
         

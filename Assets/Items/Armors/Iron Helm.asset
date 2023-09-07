@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Iron Helm
   m_EditorClassIdentifier: 
   itemName: Iron Helm
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d9f4bde6ce320ec44b6dfb28f1616f67, type: 3}
   description: A sturdy iron helmet.
   baseValue: 30
   rarity: 1
   requiredLevel: 5
   equipSlot: 1
-  armorType: 1
+  armorType: 2
   defensePower: 20
   resistance: 5
   weight: 10

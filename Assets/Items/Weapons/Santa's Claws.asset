@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Santa's Claws
   m_EditorClassIdentifier: 
   itemName: Santa's Claws
-  icon: {fileID: 21300000, guid: 19eaf39add27e934da780a4336f7bae5, type: 3}
+  icon: {fileID: 21300000, guid: 99e2f64dd89d4cf4bb7082877050c88a, type: 3}
   description: Ho ho ho!
   baseValue: 25
   rarity: 1
   requiredLevel: 2
-  equipSlot: 5
-  weaponType: 12
+  equipSlot: 32
+  weaponType: 4096
   attackPower: 8
   attackSpeed: 2
   durability: 30

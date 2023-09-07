@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Gemstone Sling
+  m_EditorClassIdentifier: 
+  itemName: Gemstone Sling
+  icon: {fileID: 21300000, guid: a94dc0effa563774c8925491c733f20d, type: 3}
+  description: Sling with a magical gemstone pouch.
+  baseValue: 50
+  rarity: 2
+  requiredLevel: 8
+  equipSlot: 8
+  weaponType: 1024
+  attackPower: 5
+  attackSpeed: 1.6
+  durability: 35
+  range: 10
+  criticalHitChance: 0.1

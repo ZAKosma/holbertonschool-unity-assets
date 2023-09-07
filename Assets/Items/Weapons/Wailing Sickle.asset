@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Wailing Sickle
+  m_EditorClassIdentifier: 
+  itemName: Wailing Sickle
+  icon: {fileID: 21300000, guid: 65a29b92399bd1d48aa349f770402cbf, type: 3}
+  description: Haunted by eerie sounds.
+  baseValue: 75
+  rarity: 2
+  requiredLevel: 6
+  equipSlot: 8
+  weaponType: 67108864
+  attackPower: 18
+  attackSpeed: 1.3
+  durability: 70
+  range: 1
+  criticalHitChance: 0.12

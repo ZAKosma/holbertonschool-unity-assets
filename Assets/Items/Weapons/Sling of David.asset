@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Sling of David
   m_EditorClassIdentifier: 
   itemName: Sling of David
-  icon: {fileID: 21300000, guid: daf2ab606d4db0d4f9ecf4c02137d2a8, type: 3}
+  icon: {fileID: 21300000, guid: 4c5aeb2d9cfe55a499ef1a88e53e566e, type: 3}
   description: A biblical relic.
   baseValue: 30
   rarity: 2
   requiredLevel: 3
-  equipSlot: 4
-  weaponType: 10
+  equipSlot: 32
+  weaponType: 1024
   attackPower: 10
   attackSpeed: 2.5
   durability: 50

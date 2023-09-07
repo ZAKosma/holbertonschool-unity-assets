@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Pants of Panic
   m_EditorClassIdentifier: 
   itemName: Pants of Panic
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d4ce16524c19f644da3d3718091189c1, type: 3}
   description: Something feels off about these pants.
   baseValue: 10
-  rarity: 0
+  rarity: 2
   requiredLevel: 2
-  equipSlot: 3
+  equipSlot: 4
   armorType: 1
   defensePower: -10
   resistance: 0

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Leather Tunic
   m_EditorClassIdentifier: 
   itemName: Leather Tunic
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 84a4dd5eee6b9d34db44f615eb3fd403, type: 3}
   description: Simple leather armor.
   baseValue: 15
-  rarity: 0
+  rarity: 1
   requiredLevel: 1
   equipSlot: 2
-  armorType: 0
+  armorType: 1
   defensePower: 10
   resistance: 0
   weight: 5

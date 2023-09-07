@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Bow of Chuckles
   m_EditorClassIdentifier: 
   itemName: Bow of Chuckles
-  icon: {fileID: 21300000, guid: 51a67853b5152014e9926b303fd9c4c0, type: 3}
+  icon: {fileID: 21300000, guid: c22f6bc26a4881644b13fd7d7fb1efd9, type: 3}
   description: Giggle with every twang.
   baseValue: 20
   rarity: 1
   requiredLevel: 2
-  equipSlot: 4
-  weaponType: 1
+  equipSlot: 32
+  weaponType: 2
   attackPower: 5
   attackSpeed: 1.5
   durability: 40
   range: 10
-  criticalHitChance: 0.05
+  criticalHitChance: 18.7

@@ -33,5 +33,6 @@ public enum WeaponType
     Halberd = 1 << 22,     // Polearm with an axe blade, offers reach and versatility.
     Boomerang = 1 << 23,   // Throwable weapon that returns, useful for hitting multiple targets.
     Psychic = 1 << 24,     // Requires mental power, deals magical or psychic damage.
-    Exotic = 1 << 25       // Rare and unusual, often with unique properties or abilities.
+    Exotic = 1 << 25,       // Rare and unusual, often with unique properties or abilities.
+    Sickle = 1 << 26
 }

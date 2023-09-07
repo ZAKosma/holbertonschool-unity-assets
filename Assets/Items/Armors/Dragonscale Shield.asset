@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Dragonscale Shield
   m_EditorClassIdentifier: 
   itemName: Dragonscale Shield
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9ba7b74a06e16cd49ba9741f16f5d23f, type: 3}
   description: Made from real dragon scales!
   baseValue: 75
   rarity: 4
   requiredLevel: 20
-  equipSlot: 5
-  armorType: 7
+  equipSlot: 16
+  armorType: 128
   defensePower: 50
   resistance: 35
   weight: 15

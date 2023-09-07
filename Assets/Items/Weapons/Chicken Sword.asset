@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c706ac32dbd56b94aa78fa8af4036b69, type: 3}
+  m_Name: Chicken Sword
+  m_EditorClassIdentifier: 
+  itemName: Chicken Sword
+  icon: {fileID: 21300000, guid: 9461c4a11819ae340b18b60ddd40295f, type: 3}
+  description: Clucks upon striking
+  baseValue: 500
+  rarity: 16
+  requiredLevel: 30
+  equipSlot: 8
+  weaponType: 1
+  attackPower: 1
+  attackSpeed: 5
+  durability: 100
+  range: 1
+  criticalHitChance: 0.5
